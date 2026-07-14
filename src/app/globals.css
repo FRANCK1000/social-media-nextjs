@@ -1,26 +1,319 @@
 @import "tailwindcss";
 
+/* 
+  Configuration du thème global avec Tailwind CSS v4
+  Définit les jetons de design pour une esthétique sombre ultramoderne ("Aura")
+*/
+@theme {
+  --color-background-dark: var(--bg-dark);
+  --color-card-dark: var(--card-dark);
+  --color-card-dark-hover: var(--card-dark-hover);
+  --color-border-dark: var(--border-dark);
+  --color-border-dark-hover: var(--border-dark-hover);
+  
+  --color-primary: var(--primary-color);
+  --color-primary-dark: var(--primary-color-dark);
+  --color-secondary: var(--secondary-color);
+  --color-secondary-dark: var(--secondary-color-dark);
+  --color-accent: var(--accent-color);
+
+  --font-sans: "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg-dark: #050508;
+  --card-dark: rgba(13, 13, 20, 0.7);
+  --card-dark-hover: rgba(20, 20, 30, 0.85);
+  --border-dark: rgba(255, 255, 255, 0.08);
+  --border-dark-hover: rgba(255, 255, 255, 0.15);
+  
+  --primary-color: #818cf8; /* Indigo */
+  --primary-color-dark: #4f46e5;
+  --secondary-color: #f472b6; /* Fuchsia/Pink */
+  --secondary-color-dark: #db2777;
+  --accent-color: #a78bfa; /* Violet */
+
+  --background: var(--bg-dark);
+  --foreground: #f4f4f6;
+  --nav-blur: 16px;
+
+  --gradient-accent-start: #818cf8;
+  --gradient-accent-mid: #a78bfa;
+  --gradient-accent-end: #f472b6;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+[data-theme="light"] {
+  --bg-dark: #f8fafc; /* Slate 50 */
+  --card-dark: rgba(255, 255, 255, 0.75);
+  --card-dark-hover: rgba(255, 255, 255, 0.95);
+  --border-dark: rgba(15, 23, 42, 0.08);
+  --border-dark-hover: rgba(15, 23, 42, 0.15);
+  
+  --primary-color: #4842b2; /* Soft Lavender-Indigo */
+  --primary-color-dark: #35308c;
+  --secondary-color: #7052bf; /* Soft Slate-Violet */
+  --secondary-color-dark: #583f99;
+  --accent-color: #927ccf;
+
+  --background: var(--bg-dark);
+  --foreground: #0f172a; /* Slate 900 */
+  
+  --gradient-accent-start: #4842b2;
+  --gradient-accent-mid: #5d61c6;
+  --gradient-accent-end: #7052bf;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* RÈGLES D'OVERRIDE POUR LE THÈME CLAIR (AURA LIGHT) */
+[data-theme="light"] {
+  color-scheme: light;
+}
+
+/* Conversion des couleurs de texte principales */
+[data-theme="light"] .text-white:not(.bg-gradient-accent, .bg-primary, .bg-secondary, .glow-btn, .text-white-force, .bg-gradient-accent *, .bg-primary *, .bg-secondary *, .glow-btn *, .text-white-force *) {
+  color: #0f172a !important; /* Slate 900 */
+}
+
+[data-theme="light"] .text-gray-400 {
+  color: #475569 !important; /* Slate 600 */
+}
+
+[data-theme="light"] .text-gray-500 {
+  color: #64748b !important; /* Slate 500 */
+}
+
+[data-theme="light"] .text-gray-300 {
+  color: #334155 !important; /* Slate 700 */
+}
+
+/* Conversion des conteneurs sombres en conteneurs clairs translucides */
+[data-theme="light"] .glass-panel {
+  background: rgba(255, 255, 255, 0.75) !important;
+  border: 1px solid rgba(15, 23, 42, 0.08) !important;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.02) !important;
+}
+
+[data-theme="light"] .glass-panel-hover:hover {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-color: rgba(15, 23, 42, 0.15) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04) !important;
+}
+
+[data-theme="light"] .glass-header {
+  background: rgba(248, 250, 252, 0.85) !important;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08) !important;
+}
+
+[data-theme="light"] .bg-white\/5 {
+  background-color: rgba(15, 23, 42, 0.04) !important;
+}
+
+[data-theme="light"] .hover\:bg-white\/5:hover {
+  background-color: rgba(15, 23, 42, 0.07) !important;
+}
+
+[data-theme="light"] .bg-black\/35,
+[data-theme="light"] .bg-black\/20,
+[data-theme="light"] .bg-black\/40,
+[data-theme="light"] .bg-neutral-950\/40 {
+  background-color: rgba(255, 255, 255, 0.65) !important;
+}
+
+[data-theme="light"] .bg-neutral-950\/95 {
+  background-color: rgba(255, 255, 255, 0.98) !important;
+}
+
+[data-theme="light"] .border-white\/5,
+[data-theme="light"] .border-white\/10 {
+  border-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+[data-theme="light"] .bg-background-dark {
+  background-color: #f8fafc !important;
+}
+
+[data-theme="light"] .bg-\[\#030305\],
+[data-theme="light"] .bg-\[\#070709\]\/40,
+[data-theme="light"] .bg-\[\#030305\]\/20,
+[data-theme="light"] .bg-\[\#070709\] {
+  background-color: #e2e8f0 !important;
+}
+
+/* Overrides de couleurs de textes grisés et neutres */
+[data-theme="light"] .text-gray-100 {
+  color: #0f172a !important; /* Slate 900 */
+}
+
+[data-theme="light"] .text-gray-200,
+[data-theme="light"] .text-neutral-200 {
+  color: #1e293b !important; /* Slate 800 */
+}
+
+[data-theme="light"] .text-neutral-300 {
+  color: #334155 !important; /* Slate 700 */
+}
+
+[data-theme="light"] .text-gray-600 {
+  color: #94a3b8 !important;
+}
+
+/* Overrides spécifiques aux boutons translucides sombres (bg-white/5 et bg-white/10) */
+[data-theme="light"] .bg-white\/5,
+[data-theme="light"] .bg-white\/10 {
+  background-color: rgba(15, 23, 42, 0.05) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] button.bg-white\/5,
+[data-theme="light"] a.bg-white\/5,
+[data-theme="light"] button.bg-white\/10,
+[data-theme="light"] a.bg-white\/10 {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .hover\:bg-white\/5:hover,
+[data-theme="light"] .hover\:bg-white\/10:hover {
+  background-color: rgba(15, 23, 42, 0.09) !important;
+}
+
+/* Corriger l'icône blanche devenant invisible sur les boutons de suggestions */
+[data-theme="light"] button.bg-white\/10 svg,
+[data-theme="light"] a.bg-white\/10 svg,
+[data-theme="light"] button.bg-white\/5 svg,
+[data-theme="light"] a.bg-white\/5 svg {
+  stroke: #0f172a !important;
+}
+
+[data-theme="light"] button.bg-white\/10:hover svg,
+[data-theme="light"] button.bg-white\/5:hover svg {
+  stroke: #ffffff !important;
+}
+
+/* Correction de l'état Hover White pour éviter les disparitions de textes */
+[data-theme="light"] .hover\:text-white:hover:not(.bg-gradient-accent *, .bg-primary *, .bg-secondary *) {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .group:hover .group-hover\:text-white {
+  color: #0f172a !important;
+}
+
+/* Correction du contraste de couleur vert émeraude (état Abonné) */
+[data-theme="light"] .text-emerald-400 {
+  color: #047857 !important; /* Emerald 700 */
+}
+
+[data-theme="light"] .bg-emerald-500\/10,
+[data-theme="light"] .bg-emerald-600\/20 {
+  background-color: rgba(16, 185, 129, 0.1) !important;
+}
+
+[data-theme="light"] .border-emerald-500\/30 {
+  border-color: rgba(16, 185, 129, 0.2) !important;
+}
+
+/* Scrollbar en thème clair */
+[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: rgba(15, 23, 42, 0.15);
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(15, 23, 42, 0.3);
+}
+
+[data-theme="light"] ::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.02);
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  letter-spacing: -0.01em;
+}
+
+/* Scrollbar premium style */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Glassmorphism utility helpers */
+.glass-panel {
+  background: rgba(13, 13, 20, 0.65);
+  backdrop-filter: blur(var(--nav-blur));
+  -webkit-backdrop-filter: blur(var(--nav-blur));
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.glass-panel-hover:hover {
+  background: rgba(20, 20, 30, 0.75);
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 30px rgb(0 0 0 / 0.5);
+  transform: translateY(-2px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-header {
+  background: rgba(5, 5, 8, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--gradient-accent-start) 0%, var(--gradient-accent-mid) 50%, var(--gradient-accent-end) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.bg-gradient-accent {
+  background: linear-gradient(135deg, var(--gradient-accent-start) 0%, var(--gradient-accent-mid) 50%, var(--gradient-accent-end) 100%);
+}
+
+.glow-btn:hover {
+  box-shadow: 0 0 15px rgba(129, 140, 248, 0.4);
+  transform: scale(1.02);
+  transition: all 0.2s ease-in-out;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(50px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-50px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }

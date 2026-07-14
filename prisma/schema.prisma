@@ -1,0 +1,125 @@
+// Fichier de configuration Prisma Schema pour le réseau social Aura
+// Définit les modèles PostgreSQL pour la base de données de l'application
+
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Modèle Utilisateur
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String   // Mot de passe haché (bcrypt)
+  username  String   @unique
+  name      String
+  bio       String?  @db.Text
+  avatar    String?  // URL de l'image stockée sur Cloudinary
+  cover     String?  // URL de la photo de couverture stockée sur Cloudinary
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  lastActive DateTime @default(now())
+
+  // Relations
+  posts            Post[]
+  likes            Like[]
+  comments         Comment[]
+  
+  // Relations d'abonnements (Self-relation N-N via table intermédiaire Follow)
+  followers        Follow[]  @relation("following")
+  following        Follow[]  @relation("follower")
+
+  // Relations de messagerie
+  sentMessages     Message[] @relation("sender")
+  receivedMessages Message[] @relation("receiver")
+
+  // Relation Stories
+  stories          Story[]
+}
+
+// Table intermédiaire pour gérer les abonnements (Followers / Following)
+model Follow {
+  followerId  String
+  follower    User   @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
+  followingId String
+  following   User   @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@id([followerId, followingId])
+}
+
+// Modèle de Publication (Post)
+model Post {
+  id        String   @id @default(uuid())
+  content   String   @db.Text
+  image     String?  // URL Cloudinary de l'image du post
+  createdAt DateTime @default(now())
+  
+  // Auteur du post
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  // Relations
+  likes     Like[]
+  comments  Comment[]
+}
+
+// Modèle pour les J'aime (Likes)
+model Like {
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postId String
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@id([userId, postId])
+}
+
+// Modèle de Commentaire
+model Comment {
+  id        String   @id @default(uuid())
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+
+  // Utilisateur qui a écrit le commentaire
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Post auquel le commentaire est rattaché
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  // Gestion des commentaires imbriqués (réponses)
+  parentId  String?
+  parent    Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   Comment[] @relation("CommentReplies")
+}
+
+// Modèle de Message Privé (Direct Message - DM)
+model Message {
+  id         String   @id @default(uuid())
+  content    String   @db.Text
+  createdAt  DateTime @default(now())
+  isRead     Boolean  @default(false)
+
+  // Expéditeur
+  senderId   String
+  sender     User     @relation("sender", fields: [senderId], references: [id], onDelete: Cascade)
+
+  // Destinataire
+  receiverId String
+  receiver   User     @relation("receiver", fields: [receiverId], references: [id], onDelete: Cascade)
+}
+
+// Modèle pour les Stories (valides 24h)
+model Story {
+  id        String   @id @default(uuid())
+  mediaUrl  String   // URL Cloudinary de l'image
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+
+  // Relation utilisateur
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
