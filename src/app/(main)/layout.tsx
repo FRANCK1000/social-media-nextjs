@@ -16,7 +16,7 @@ export default function MainLayout({
       <Sidebar />
 
       {/* Colonne Centrale - Contenu principal fluide */}
-      <main className="flex-1 border-r border-white/5 min-h-screen bg-black/5 pt-14 pb-16 md:pt-0 md:pb-0">
+      <main className="flex-1 border-r border-white/5 min-h-screen bg-black/5 pt-[60px] pb-[68px] md:pt-0 md:pb-0">
         {children}
       </main>
 
