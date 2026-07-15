@@ -108,24 +108,24 @@ export default function RegisterPage() {
               <div className="p-2 rounded-lg bg-white/5 border border-white/5 text-primary">
                 <Zap className="w-4 h-4" />
               </div>
-              <span className="text-xs font-semibold text-gray-200">Profils personnalisables avec avatars uniques</span>
+              <span className="text-sm font-semibold text-gray-200">Profils personnalisables avec avatars uniques</span>
             </div>
             <div className="flex items-center space-x-3">
               <div className="p-2 rounded-lg bg-white/5 border border-white/5 text-primary">
                 <ShieldCheck className="w-4 h-4" />
               </div>
-              <span className="text-xs font-semibold text-gray-200">Sécurité maximale pour vos données</span>
+              <span className="text-sm font-semibold text-gray-200">Sécurité maximale pour vos données</span>
             </div>
             <div className="flex items-center space-x-3">
               <div className="p-2 rounded-lg bg-white/5 border border-white/5 text-primary">
                 <Globe className="w-4 h-4" />
               </div>
-              <span className="text-xs font-semibold text-gray-200">Stories interactives et partage multimédia</span>
+              <span className="text-sm font-semibold text-gray-200">Stories interactives et partage multimédia</span>
             </div>
           </div>
         </div>
 
-        <div className="text-[10px] text-gray-600 font-semibold uppercase tracking-wider z-10">
+        <div className="text-xs text-gray-600 font-semibold uppercase tracking-wider z-10">
           Aura Corporation © 2026 — Plateforme social-media pro.
         </div>
       </div>
@@ -135,19 +135,19 @@ export default function RegisterPage() {
         <div className="w-full max-w-md glass-panel p-8 md:p-10 rounded-3xl shadow-2xl border-white/10 animate-fade-in space-y-6 bg-neutral-950/40 relative my-8">
           
           <div className="flex lg:hidden justify-center items-center space-x-2">
-            <div className="w-8 h-8 rounded-xl bg-gradient-accent flex items-center justify-center">
-              <Sparkles className="w-4 h-4 text-white" />
+            <div className="w-8.5 h-8.5 rounded-xl bg-gradient-accent flex items-center justify-center">
+              <Sparkles className="w-4.5 h-4.5 text-white" />
             </div>
-            <span className="text-lg font-black text-white tracking-widest">AURA</span>
+            <span className="text-xl font-black text-white tracking-widest">AURA</span>
           </div>
 
           <div className="text-center lg:text-left space-y-1">
             <h1 className="text-2xl font-black text-white tracking-tight">Créer un compte</h1>
-            <p className="text-xs text-gray-400">Rejoignez-nous dès aujourd'hui. Remplissez ce formulaire.</p>
+            <p className="text-sm text-gray-400">Rejoignez-nous dès aujourd'hui. Remplissez ce formulaire.</p>
           </div>
 
           {error && (
-            <div className="p-4 rounded-2xl bg-red-950/30 border border-red-500/20 text-red-200 text-xs text-center font-semibold animate-shake">
+            <div className="p-4 rounded-2xl bg-red-950/30 border border-red-500/20 text-red-200 text-sm text-center font-semibold animate-shake">
               {error}
             </div>
           )}
@@ -156,7 +156,7 @@ export default function RegisterPage() {
             
             {/* Nom Complet */}
             <div className="space-y-1.5">
-              <label className="block text-[9px] font-bold uppercase tracking-widest text-gray-400">
+              <label className="block text-xs font-bold uppercase tracking-widest text-gray-400">
                 Nom Complet
               </label>
               <div className="relative group">
@@ -169,14 +169,14 @@ export default function RegisterPage() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Jean Dupont"
-                  className="w-full pl-11 pr-4 py-3 bg-black/35 border border-white/5 rounded-2xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/5 transition-all group-hover:border-white/10"
+                  className="w-full pl-11 pr-4 py-3 bg-black/35 border border-white/5 rounded-2xl text-base md:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/5 transition-all group-hover:border-white/10"
                 />
               </div>
             </div>
 
             {/* Nom d'utilisateur */}
             <div className="space-y-1.5">
-              <label className="block text-[9px] font-bold uppercase tracking-widest text-gray-400">
+              <label className="block text-xs font-bold uppercase tracking-widest text-gray-400">
                 Nom d'utilisateur (@)
               </label>
               <div className="relative group">
@@ -189,14 +189,14 @@ export default function RegisterPage() {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="jeandupont"
-                  className="w-full pl-11 pr-4 py-3 bg-black/35 border border-white/5 rounded-2xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/5 transition-all group-hover:border-white/10"
+                  className="w-full pl-11 pr-4 py-3 bg-black/35 border border-white/5 rounded-2xl text-base md:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/5 transition-all group-hover:border-white/10"
                 />
               </div>
             </div>
 
             {/* Email */}
             <div className="space-y-1.5">
-              <label className="block text-[9px] font-bold uppercase tracking-widest text-gray-400">
+              <label className="block text-xs font-bold uppercase tracking-widest text-gray-400">
                 Adresse Email
               </label>
               <div className="relative group">
@@ -209,14 +209,14 @@ export default function RegisterPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="jean.dupont@exemple.com"
-                  className="w-full pl-11 pr-4 py-3 bg-black/35 border border-white/5 rounded-2xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/5 transition-all group-hover:border-white/10"
+                  className="w-full pl-11 pr-4 py-3 bg-black/35 border border-white/5 rounded-2xl text-base md:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/5 transition-all group-hover:border-white/10"
                 />
               </div>
             </div>
 
             {/* Mot de passe */}
             <div className="space-y-1.5">
-              <label className="block text-[9px] font-bold uppercase tracking-widest text-gray-400">
+              <label className="block text-xs font-bold uppercase tracking-widest text-gray-400">
                 Mot de passe (Min. 6)
               </label>
               <div className="relative group">
@@ -229,7 +229,7 @@ export default function RegisterPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full pl-11 pr-12 py-3 bg-black/35 border border-white/5 rounded-2xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/5 transition-all group-hover:border-white/10"
+                  className="w-full pl-11 pr-12 py-3 bg-black/35 border border-white/5 rounded-2xl text-base md:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/5 transition-all group-hover:border-white/10"
                 />
                 <button
                   type="button"
@@ -250,12 +250,12 @@ export default function RegisterPage() {
               {isSubmitting ? (
                 <>
                   <Loader2 className="w-4.5 h-4.5 animate-spin" />
-                  <span className="text-xs uppercase tracking-wider font-extrabold">Création en cours...</span>
+                  <span className="text-sm uppercase tracking-wider font-extrabold">Création en cours...</span>
                 </>
               ) : (
                 <>
                   <UserPlus className="w-4.5 h-4.5" />
-                  <span className="text-xs uppercase tracking-wider font-extrabold">S'inscrire</span>
+                  <span className="text-sm uppercase tracking-wider font-extrabold">S'inscrire</span>
                 </>
               )}
             </button>
@@ -263,7 +263,7 @@ export default function RegisterPage() {
 
           {/* Redirection */}
           <div className="text-center pt-5 border-t border-white/5">
-            <p className="text-xs text-gray-500 leading-normal">
+            <p className="text-sm text-gray-500 leading-normal">
               Déjà inscrit ?{" "}
               <Link
                 href="/login"

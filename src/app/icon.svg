@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <defs>
+    <linearGradient id="aura-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#818cf8" />
+      <stop offset="100%" stop-color="#f472b6" />
+    </linearGradient>
+  </defs>
+  <!-- Arrière-plan avec le dégradé Aura arrondi -->
+  <rect width="32" height="32" rx="9" fill="url(#aura-grad)" />
+  <!-- Icône d'éclats (Sparkles) blanche centrale -->
+  <path d="M16 6.5 L17.5 13 L24 14.5 L17.5 16 L16 22.5 L14.5 16 L8 14.5 L14.5 13 Z" fill="#ffffff" />
+  <path d="M8 6 L8.5 8.2 L10.5 8.7 L8.5 9.2 L8 11.4 L7.5 9.2 L5.5 8.7 L7.5 8.2 Z" fill="#ffffff" opacity="0.8" />
+  <path d="M24 21 L24.3 22.8 L26.1 23.3 L24.3 23.8 L24 25.6 L23.7 23.8 L21.9 23.3 L23.7 22.8 Z" fill="#ffffff" opacity="0.8" />
+</svg>

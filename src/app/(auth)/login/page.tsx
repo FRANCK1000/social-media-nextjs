@@ -98,25 +98,25 @@ export default function LoginPage() {
               <div className="p-2 rounded-lg bg-white/5 border border-white/5 text-primary">
                 <Zap className="w-4 h-4" />
               </div>
-              <span className="text-xs font-semibold text-gray-200">Expérience en temps réel ultra-fluide</span>
+              <span className="text-sm font-semibold text-gray-200">Expérience en temps réel ultra-fluide</span>
             </div>
             <div className="flex items-center space-x-3">
               <div className="p-2 rounded-lg bg-white/5 border border-white/5 text-primary">
                 <ShieldCheck className="w-4 h-4" />
               </div>
-              <span className="text-xs font-semibold text-gray-200">Sécurité et cryptage des sessions de bout en bout</span>
+              <span className="text-sm font-semibold text-gray-200">Sécurité et cryptage des sessions de bout en bout</span>
             </div>
             <div className="flex items-center space-x-3">
               <div className="p-2 rounded-lg bg-white/5 border border-white/5 text-primary">
                 <Globe className="w-4 h-4" />
               </div>
-              <span className="text-xs font-semibold text-gray-200">Réseau d'experts internationaux connectés</span>
+              <span className="text-sm font-semibold text-gray-200">Réseau d'experts internationaux connectés</span>
             </div>
           </div>
         </div>
 
         {/* Pied de page du panneau gauche */}
-        <div className="text-[10px] text-gray-600 font-semibold uppercase tracking-wider z-10">
+        <div className="text-xs text-gray-600 font-semibold uppercase tracking-wider z-10">
           Aura Corporation © 2026 — Plateforme social-media pro.
         </div>
       </div>
@@ -127,20 +127,20 @@ export default function LoginPage() {
           
           {/* Logo mobile */}
           <div className="flex lg:hidden justify-center items-center space-x-2 mb-2">
-            <div className="w-8 h-8 rounded-xl bg-gradient-accent flex items-center justify-center">
-              <Sparkles className="w-4 h-4 text-white" />
+            <div className="w-8.5 h-8.5 rounded-xl bg-gradient-accent flex items-center justify-center">
+              <Sparkles className="w-4.5 h-4.5 text-white" />
             </div>
-            <span className="text-lg font-black text-white tracking-widest">AURA</span>
+            <span className="text-xl font-black text-white tracking-widest">AURA</span>
           </div>
 
           <div className="text-center lg:text-left space-y-2">
             <h1 className="text-3xl font-black text-white tracking-tight">Connexion</h1>
-            <p className="text-xs text-gray-400">Heureux de vous revoir. Saisissez vos identifiants pour continuer.</p>
+            <p className="text-sm text-gray-400">Heureux de vous revoir. Saisissez vos identifiants pour continuer.</p>
           </div>
 
           {/* Message d'erreur personnalisé */}
           {error && (
-            <div className="p-4 rounded-2xl bg-red-950/30 border border-red-500/20 text-red-200 text-xs text-center font-semibold animate-shake">
+            <div className="p-4 rounded-2xl bg-red-950/30 border border-red-500/20 text-red-200 text-sm text-center font-semibold animate-shake">
               {error}
             </div>
           )}
@@ -150,7 +150,7 @@ export default function LoginPage() {
             
             {/* Email */}
             <div className="space-y-2">
-              <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400">
+              <label className="block text-xs font-bold uppercase tracking-widest text-gray-400">
                 Adresse Email
               </label>
               <div className="relative group">
@@ -163,7 +163,7 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="nom@exemple.com"
-                  className="w-full pl-11 pr-4 py-3.5 bg-black/35 border border-white/5 rounded-2xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/5 transition-all group-hover:border-white/10"
+                  className="w-full pl-11 pr-4 py-3.5 bg-black/35 border border-white/5 rounded-2xl text-base md:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/5 transition-all group-hover:border-white/10"
                 />
               </div>
             </div>
@@ -171,7 +171,7 @@ export default function LoginPage() {
             {/* Mot de passe */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400">
+                <label className="block text-xs font-bold uppercase tracking-widest text-gray-400">
                   Mot de passe
                 </label>
               </div>
@@ -185,7 +185,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full pl-11 pr-12 py-3.5 bg-black/35 border border-white/5 rounded-2xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/5 transition-all group-hover:border-white/10"
+                  className="w-full pl-11 pr-12 py-3.5 bg-black/35 border border-white/5 rounded-2xl text-base md:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/5 transition-all group-hover:border-white/10"
                 />
                 <button
                   type="button"
@@ -206,12 +206,12 @@ export default function LoginPage() {
               {isSubmitting ? (
                 <>
                   <Loader2 className="w-4.5 h-4.5 animate-spin" />
-                  <span className="text-xs uppercase tracking-wider font-extrabold">Chargement...</span>
+                  <span className="text-sm uppercase tracking-wider font-extrabold">Chargement...</span>
                 </>
               ) : (
                 <>
                   <LogIn className="w-4.5 h-4.5" />
-                  <span className="text-xs uppercase tracking-wider font-extrabold">Se connecter</span>
+                  <span className="text-sm uppercase tracking-wider font-extrabold">Se connecter</span>
                 </>
               )}
             </button>
@@ -219,7 +219,7 @@ export default function LoginPage() {
 
           {/* Lien redirection d'inscription */}
           <div className="text-center pt-6 border-t border-white/5">
-            <p className="text-xs text-gray-500 leading-normal">
+            <p className="text-sm text-gray-500 leading-normal">
               Nouveau sur Aura ?{" "}
               <Link
                 href="/register"
