@@ -317,3 +317,93 @@ body {
 .animate-slide-in-left {
   animation: slideInLeft 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+/* ==========================================================================
+   MOBILE NAVIGATION PREMIUM STYLING (GLOWING CAPSULES & HIGH CONTRAST)
+   ========================================================================== */
+
+/* 1. Containers */
+.mobile-header-premium {
+  background-color: rgba(9, 9, 11, 0.75) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.25) !important;
+}
+[data-theme="light"] .mobile-header-premium {
+  background-color: rgba(255, 255, 255, 0.85) !important;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03) !important;
+}
+
+.mobile-nav-premium {
+  background-color: rgba(9, 9, 11, 0.75) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+  box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.25) !important;
+}
+[data-theme="light"] .mobile-nav-premium {
+  background-color: rgba(255, 255, 255, 0.85) !important;
+  border-top: 1px solid rgba(15, 23, 42, 0.06) !important;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.03) !important;
+}
+
+/* 2. Top Header Buttons */
+.mobile-top-btn {
+  color: #a1a1aa !important; /* Zinc 400 */
+}
+.mobile-top-btn:hover {
+  color: #818cf8 !important; /* Indigo Primary */
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+[data-theme="light"] .mobile-top-btn {
+  color: #475569 !important; /* Slate 600 */
+}
+[data-theme="light"] .mobile-top-btn:hover {
+  color: #4842b2 !important; /* Soft Lavender-Indigo */
+  background-color: rgba(15, 23, 42, 0.05) !important;
+}
+
+/* 3. Bottom Nav Items */
+.mobile-nav-item {
+  text-decoration: none;
+}
+.mobile-nav-item-icon-container {
+  color: #a1a1aa !important; /* Zinc 400 */
+  background-color: transparent !important;
+}
+.mobile-nav-item-label {
+  color: #71717a !important; /* Zinc 500 */
+  transition: all 0.3s ease;
+}
+
+/* 4. Active states */
+.mobile-nav-item.active .mobile-nav-item-icon-container {
+  background-color: rgba(129, 140, 248, 0.12) !important; /* Glow primary */
+  color: #818cf8 !important; /* Indigo */
+}
+.mobile-nav-item.active .mobile-nav-item-label {
+  color: #818cf8 !important;
+  font-weight: 900 !important;
+}
+
+/* 5. Light Theme overrides */
+[data-theme="light"] .mobile-nav-item-icon-container {
+  color: #475569 !important; /* Slate 600 */
+}
+[data-theme="light"] .mobile-nav-item-label {
+  color: #64748b !important; /* Slate 500 */
+}
+[data-theme="light"] .mobile-nav-item.active .mobile-nav-item-icon-container {
+  background-color: rgba(72, 66, 178, 0.08) !important; /* Glow light primary */
+  color: #4842b2 !important; /* Soft Lavender-Indigo */
+}
+[data-theme="light"] .mobile-nav-item.active .mobile-nav-item-label {
+  color: #4842b2 !important;
+  font-weight: 900 !important;
+}
+[data-theme="light"] .mobile-nav-item:hover:not(.active) .mobile-nav-item-icon-container {
+  background-color: rgba(15, 23, 42, 0.04) !important;
+  color: #0f172a !important;
+}
+[data-theme="light"] .mobile-nav-item:hover:not(.active) .mobile-nav-item-label {
+  color: #0f172a !important;
+}
+
