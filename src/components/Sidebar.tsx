@@ -3,6 +3,7 @@
 // - Sur Desktop (md+) : Une barre latérale gauche complète fixe
 // - Sur Mobile (<md) : Un bandeau supérieur fixe et une barre de navigation inférieure fluide (Bottom Nav Bar)
 // Intègre le choix dynamique de la langue (Français/Anglais) avec l'icône Globe
+// Gère parfaitement les contrastes élevés en mode clair (light mode) pour tous les textes, boutons et hovers
 
 "use client";
 
@@ -64,7 +65,7 @@ export default function Sidebar() {
             <div className="w-9 h-9 rounded-xl bg-gradient-accent flex items-center justify-center shadow-lg shadow-primary/20">
               <Sparkles className="w-5 h-5 text-white" />
             </div>
-            <span className="text-2xl font-black text-white tracking-wider">Aura</span>
+            <span className="text-2xl font-black text-white [data-theme=light]:text-slate-900 tracking-wider">Aura</span>
           </div>
 
           {/* Navigation */}
@@ -81,10 +82,10 @@ export default function Sidebar() {
                   className={`flex items-center space-x-4 px-4 py-3.5 rounded-xl text-sm font-semibold transition-all duration-200 cursor-pointer relative ${
                     isActive
                       ? "bg-gradient-accent text-white shadow-lg shadow-primary/10"
-                      : "text-gray-400 hover:text-white hover:bg-white/5"
+                      : "text-gray-400 [data-theme=light]:text-slate-500 hover:text-white [data-theme=light]:hover:text-slate-900 hover:bg-white/5 [data-theme=light]:hover:bg-slate-100"
                   }`}
                 >
-                  <div className="relative">
+                  <div className="relative animate-fade-in">
                     <Icon className="w-5 h-5" />
                   </div>
                   <span className="hidden md:inline">{item.name}</span>
@@ -106,7 +107,7 @@ export default function Sidebar() {
           <div className="mt-8 pt-4 border-t border-white/5 flex items-center justify-between">
             <Link
               href={`/profile/${user.username}`}
-              className="flex items-center space-x-3 hover:opacity-80 transition-opacity cursor-pointer overflow-hidden"
+              className="flex items-center space-x-3 hover:opacity-85 transition-opacity cursor-pointer overflow-hidden"
             >
               <img
                 src={user.avatar || `https://api.dicebear.com/7.x/adventurer/svg?seed=${user.username}`}
@@ -114,7 +115,7 @@ export default function Sidebar() {
                 className="w-10 h-10 rounded-full border border-white/10 object-cover bg-neutral-800"
               />
               <div className="hidden md:block overflow-hidden text-left">
-                <p className="text-sm font-bold text-white truncate leading-tight">{user.name}</p>
+                <p className="text-sm font-bold text-white [data-theme=light]:text-slate-900 truncate leading-tight">{user.name}</p>
                 <p className="text-xs text-gray-500 truncate">@{user.username}</p>
               </div>
             </Link>
@@ -127,7 +128,7 @@ export default function Sidebar() {
                   toast.success(language === "fr" ? "Language set to English !" : "Langue configurée en Français !");
                 }}
                 title={t("sidebar.lang_switch")}
-                className="p-2 rounded-xl text-gray-400 hover:text-primary hover:bg-white/5 transition-all cursor-pointer relative"
+                className="p-2 rounded-xl text-gray-400 [data-theme=light]:text-slate-500 hover:text-primary [data-theme=light]:hover:text-primary hover:bg-white/5 [data-theme=light]:hover:bg-slate-100 transition-all cursor-pointer relative"
               >
                 <Globe className="w-4.5 h-4.5" />
                 <span className="absolute -bottom-0.5 -right-0.5 text-[7px] font-black uppercase text-primary bg-primary/10 px-0.5 rounded border border-primary/20 scale-90">
@@ -142,7 +143,7 @@ export default function Sidebar() {
                   toast.success(theme === "dark" ? t("sidebar.theme_light") : t("sidebar.theme_dark"));
                 }}
                 title={theme === "dark" ? t("sidebar.theme_light") : t("sidebar.theme_dark")}
-                className="p-2 rounded-xl text-gray-400 hover:text-primary hover:bg-white/5 transition-all cursor-pointer"
+                className="p-2 rounded-xl text-gray-400 [data-theme=light]:text-slate-500 hover:text-primary [data-theme=light]:hover:text-primary hover:bg-white/5 [data-theme=light]:hover:bg-slate-100 transition-all cursor-pointer"
               >
                 <Palette className="w-4.5 h-4.5" />
               </button>
@@ -151,7 +152,7 @@ export default function Sidebar() {
               <button
                 onClick={logout}
                 title={t("sidebar.logout")}
-                className="p-2 rounded-xl text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-all cursor-pointer"
+                className="p-2 rounded-xl text-gray-400 [data-theme=light]:text-slate-500 hover:text-red-400 [data-theme=light]:hover:text-red-500 hover:bg-red-500/10 [data-theme=light]:hover:bg-red-500/10 transition-all cursor-pointer"
               >
                 <LogOut className="w-4.5 h-4.5" />
               </button>
@@ -179,7 +180,7 @@ export default function Sidebar() {
               toast.success(language === "fr" ? "Language set to English !" : "Langue configurée en Français !");
             }}
             title={t("sidebar.lang_switch")}
-            className="p-2 rounded-xl text-gray-400 hover:text-primary hover:bg-white/5 transition-all cursor-pointer relative"
+            className="p-2 rounded-xl text-gray-400 [data-theme=light]:text-slate-500 hover:text-primary [data-theme=light]:hover:text-primary hover:bg-white/5 [data-theme=light]:hover:bg-slate-100 transition-all cursor-pointer relative"
           >
             <Globe className="w-4.5 h-4.5" />
             <span className="absolute bottom-1 right-1 text-[7px] font-black uppercase text-primary bg-primary/10 px-0.5 rounded border border-primary/20 scale-90">
@@ -194,7 +195,7 @@ export default function Sidebar() {
               toast.success(theme === "dark" ? t("sidebar.theme_light") : t("sidebar.theme_dark"));
             }}
             title={theme === "dark" ? t("sidebar.theme_light") : t("sidebar.theme_dark")}
-            className="p-2 rounded-xl text-gray-400 hover:text-primary hover:bg-white/5 transition-all cursor-pointer"
+            className="p-2 rounded-xl text-gray-400 [data-theme=light]:text-slate-500 hover:text-primary [data-theme=light]:hover:text-primary hover:bg-white/5 [data-theme=light]:hover:bg-slate-100 transition-all cursor-pointer"
           >
             <Palette className="w-4.5 h-4.5" />
           </button>
@@ -203,7 +204,7 @@ export default function Sidebar() {
           <button
             onClick={logout}
             title={t("sidebar.logout")}
-            className="p-2 rounded-xl text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-all cursor-pointer"
+            className="p-2 rounded-xl text-gray-400 [data-theme=light]:text-slate-500 hover:text-red-400 [data-theme=light]:hover:text-red-500 hover:bg-red-500/10 [data-theme=light]:hover:bg-red-500/10 transition-all cursor-pointer"
           >
             <LogOut className="w-4.5 h-4.5" />
           </button>
@@ -224,7 +225,7 @@ export default function Sidebar() {
               className={`flex flex-col items-center justify-center p-2 rounded-xl transition-all duration-200 cursor-pointer relative ${
                 isActive
                   ? "text-primary font-bold"
-                  : "text-gray-400 hover:text-white"
+                  : "text-gray-400 [data-theme=light]:text-slate-500 hover:text-white [data-theme=light]:hover:text-slate-900"
               }`}
             >
               <Icon className="w-5.5 h-5.5" />
