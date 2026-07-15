@@ -233,7 +233,7 @@ export default function Sidebar() {
                   <span className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-primary border-2 border-neutral-950 [data-theme=light]:border-white animate-pulse" />
                 )}
               </div>
-              <span className="text-[9px] mt-1 transition-all duration-300 tracking-wide mobile-nav-item-label">
+              <span className="text-[11px] mt-1 transition-all duration-300 tracking-wide mobile-nav-item-label">
                 {item.name}
               </span>
             </Link>

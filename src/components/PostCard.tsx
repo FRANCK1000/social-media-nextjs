@@ -104,15 +104,15 @@ export default function PostCard({ post }: PostCardProps) {
             className="w-10 h-10 rounded-full object-cover border border-white/10 bg-neutral-800"
           />
           <div>
-            <h4 className="text-sm font-bold text-white leading-tight">{post.author.name}</h4>
-            <p className="text-xs text-gray-500">@{post.author.username} • {formatDate(post.createdAt)}</p>
+            <h4 className="text-[15px] md:text-sm font-bold text-white leading-tight">{post.author.name}</h4>
+            <p className="text-[13px] md:text-xs text-gray-500">@{post.author.username} • {formatDate(post.createdAt)}</p>
           </div>
         </Link>
       </div>
 
       {/* Corps : Contenu textuel */}
       <Link href={`/posts/${post.id}`} className="block group cursor-pointer">
-        <p className="text-sm text-gray-200 leading-relaxed whitespace-pre-line group-hover:text-white transition-colors">
+        <p className="text-[15px] md:text-sm text-gray-200 leading-relaxed whitespace-pre-line group-hover:text-white transition-colors">
           {post.content}
         </p>
 
@@ -133,7 +133,7 @@ export default function PostCard({ post }: PostCardProps) {
         {/* Like */}
         <button
           onClick={handleLike}
-          className={`flex items-center space-x-2 text-xs font-semibold py-1.5 px-3 rounded-lg transition-all cursor-pointer ${
+          className={`flex items-center space-x-2 text-[13px] md:text-xs font-semibold py-1.5 px-3 rounded-lg transition-all cursor-pointer ${
             liked
               ? "text-rose-400 bg-rose-500/10"
               : "text-gray-400 hover:text-rose-400 hover:bg-rose-500/5"
@@ -146,7 +146,7 @@ export default function PostCard({ post }: PostCardProps) {
         {/* Commentaire */}
         <Link
           href={`/posts/${post.id}`}
-          className="flex items-center space-x-2 text-xs font-semibold py-1.5 px-3 rounded-lg text-gray-400 hover:text-primary hover:bg-primary/5 transition-all cursor-pointer"
+          className="flex items-center space-x-2 text-[13px] md:text-xs font-semibold py-1.5 px-3 rounded-lg text-gray-400 hover:text-primary hover:bg-primary/5 transition-all cursor-pointer"
         >
           <MessageCircle className="w-4 h-4" />
           <span>{post.commentsCount}</span>
@@ -155,7 +155,7 @@ export default function PostCard({ post }: PostCardProps) {
         {/* Partager */}
         <button
           onClick={handleShare}
-          className={`flex items-center space-x-2 text-xs font-semibold py-1.5 px-3 rounded-lg transition-all cursor-pointer ${
+          className={`flex items-center space-x-2 text-[13px] md:text-xs font-semibold py-1.5 px-3 rounded-lg transition-all cursor-pointer ${
             shareCopied
               ? "text-emerald-400 bg-emerald-500/10"
               : "text-gray-400 hover:text-primary hover:bg-primary/5"

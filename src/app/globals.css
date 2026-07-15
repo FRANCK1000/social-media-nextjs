@@ -371,6 +371,7 @@ body {
 }
 .mobile-nav-item-label {
   color: #71717a !important; /* Zinc 500 */
+  font-size: 11px !important; /* Agrandissement pour lisibilité sur smartphone */
   transition: all 0.3s ease;
 }
 
