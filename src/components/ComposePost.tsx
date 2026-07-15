@@ -1,5 +1,6 @@
-// Composant ComposePost - Éditeur de publications
-// Gère la rédaction d'un post, l'ajout d'une image avec prévisualisation (encodée en Base64) et la soumission
+// Composant ComposePost - Zone de création de publications
+// Design moderne et interactif : la zone de texte est compacte (1 ligne) par défaut,
+// et s'étend automatiquement (3 lignes + boutons d'actions) dès que l'utilisateur clique dessus ou commence à écrire.
 
 "use client";
 
@@ -24,6 +25,13 @@ export default function ComposePost({ onPostCreated }: ComposePostProps) {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
+  // Suivi du focus pour l'agrandissement dynamique
+  const [isFocused, setIsFocused] = useState(false);
+
+  // Conditions d'agrandissement de la zone de texte :
+  // Si le champ est focus, s'il contient du texte, si une image est présente ou si le sélecteur d'émojis est ouvert
+  const isExpanded = isFocused || content.trim().length > 0 || image !== null || showEmojiPicker;
+
   // Gérer la sélection de l'image et sa conversion en Base64
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -76,6 +84,7 @@ export default function ComposePost({ onPostCreated }: ComposePostProps) {
         if (fileInputRef.current) {
           fileInputRef.current.value = "";
         }
+        setShowEmojiPicker(false);
         toast.success("Publication mise en ligne !");
         // Notifier le composant parent du nouveau post
         if (onPostCreated) {
@@ -95,13 +104,13 @@ export default function ComposePost({ onPostCreated }: ComposePostProps) {
   if (!user) return null;
 
   return (
-    <div className="glass-panel p-5 rounded-2xl border-white/5 space-y-4 mb-6">
+    <div className="glass-panel p-5 rounded-2xl border-white/5 space-y-4 mb-6 transition-all duration-300 ease-in-out">
       <div className="flex items-start space-x-4">
         {/* Avatar */}
         <img
           src={user.avatar || `https://api.dicebear.com/7.x/adventurer/svg?seed=${user.username}`}
           alt={user.name}
-          className="w-11 h-11 rounded-full object-cover border border-white/10 bg-neutral-800"
+          className="w-10 h-10 rounded-full object-cover border border-white/10 bg-neutral-800 shrink-0"
         />
 
         {/* Zone de texte */}
@@ -109,9 +118,16 @@ export default function ComposePost({ onPostCreated }: ComposePostProps) {
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => {
+              // Léger délai pour permettre de cliquer sur les boutons de la toolbar (image, émoji, valider) 
+              // sans déclencher un effondrement immédiat
+              setTimeout(() => setIsFocused(false), 200);
+            }}
             placeholder={t("feed.compose_placeholder")}
-            rows={3}
-            className="w-full bg-transparent border-0 text-white placeholder-gray-500 resize-none text-base focus:outline-none focus:ring-0 p-1"
+            className={`w-full bg-transparent border-0 text-white placeholder-gray-500 resize-none text-[15px] md:text-sm focus:outline-none focus:ring-0 p-1 transition-all duration-300 ease-in-out ${
+              isExpanded ? "h-20" : "h-7"
+            }`}
           />
 
           {/* Prévisualisation de l'image sélectionnée */}
@@ -134,66 +150,69 @@ export default function ComposePost({ onPostCreated }: ComposePostProps) {
         </div>
       </div>
 
-      <div className="flex items-center justify-between pt-4 border-t border-white/5">
-        <div className="flex items-center space-x-2">
-          {/* Input d'image masqué */}
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleImageChange}
-            accept="image/*"
-            className="hidden"
-          />
-          
-          <button
-            type="button"
-            onClick={triggerFileInput}
-            className="p-2.5 rounded-xl text-gray-400 hover:text-primary hover:bg-white/5 transition-all cursor-pointer"
-            title="Ajouter une image"
-          >
-            <Image className="w-5 h-5" />
-          </button>
-          
-          <div className="relative">
+      {/* Barre d'outils et de validation (masquée si replié, apparaît avec animation) */}
+      {isExpanded && (
+        <div className="flex items-center justify-between pt-4 border-t border-white/5 animate-fade-in">
+          <div className="flex items-center space-x-2">
+            {/* Input d'image masqué */}
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleImageChange}
+              accept="image/*"
+              className="hidden"
+            />
+            
             <button
               type="button"
-              className={`p-2.5 rounded-xl text-gray-400 hover:text-primary hover:bg-white/5 transition-all cursor-pointer ${
-                showEmojiPicker ? "text-primary bg-white/5" : ""
-              }`}
-              title="Ajouter un émoji"
-              onClick={() => setShowEmojiPicker((prev) => !prev)}
+              onClick={triggerFileInput}
+              className="p-2.5 rounded-xl text-gray-400 hover:text-primary hover:bg-white/5 transition-all cursor-pointer"
+              title="Ajouter une image"
             >
-              <Smile className="w-5 h-5" />
+              <Image className="w-5 h-5" />
             </button>
             
-            {showEmojiPicker && (
-              <EmojiPicker
-                onSelect={(emoji) => setContent((prev) => prev + emoji)}
-                onClose={() => setShowEmojiPicker(false)}
-              />
-            )}
+            <div className="relative">
+              <button
+                type="button"
+                className={`p-2.5 rounded-xl text-gray-400 hover:text-primary hover:bg-white/5 transition-all cursor-pointer ${
+                  showEmojiPicker ? "text-primary bg-white/5" : ""
+                }`}
+                title="Ajouter un émoji"
+                onClick={() => setShowEmojiPicker((prev) => !prev)}
+              >
+                <Smile className="w-5 h-5" />
+              </button>
+              
+              {showEmojiPicker && (
+                <EmojiPicker
+                  onSelect={(emoji) => setContent((prev) => prev + emoji)}
+                  onClose={() => setShowEmojiPicker(false)}
+                />
+              )}
+            </div>
           </div>
-        </div>
 
-        {/* Bouton Publier */}
-        <button
-          onClick={handleSubmit}
-          disabled={loading || (!content.trim() && !image)}
-          className="px-5 py-2.5 rounded-xl text-white font-bold bg-gradient-accent glow-btn shadow-lg shadow-primary/10 flex items-center space-x-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-        >
-          {loading ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin" />
-              <span>{t("feed.button_publishing")}</span>
-            </>
-          ) : (
-            <>
-              <Send className="w-4 h-4" />
-              <span>{t("feed.button_publish")}</span>
-            </>
-          )}
-        </button>
-      </div>
+          {/* Bouton Publier */}
+          <button
+            onClick={handleSubmit}
+            disabled={loading || (!content.trim() && !image)}
+            className="px-5 py-2.5 rounded-xl text-white font-bold bg-gradient-accent glow-btn shadow-lg shadow-primary/10 flex items-center space-x-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span>{t("feed.button_publishing")}</span>
+              </>
+            ) : (
+              <>
+                <Send className="w-4 h-4" />
+                <span>{t("feed.button_publish")}</span>
+              </>
+            )}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
