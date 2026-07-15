@@ -1,13 +1,16 @@
-// Page d'Accueil - Flux Principal de Publications (Feed)
-// Gère l'affichage des onglets "Pour vous" et "Suivis", l'affichage des posts et l'ajout en direct
+// Page du Flux d'Accueil - Aura
+// Gère le flux global ("Pour vous") et le flux d'abonnements ("Suivis")
+// Intègre :
+// 1. Un moteur de recherche de publications en temps réel (avec Debounce 300ms)
+// 2. Un système de défilement infini (Infinite Scroll) basé sur l'Intersection Observer API et pagination par curseur
 
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ComposePost from "@/components/ComposePost";
 import PostCard from "@/components/PostCard";
 import StoriesBar from "@/components/StoriesBar";
-import { Loader2, Sparkles, AlertCircle } from "lucide-react";
+import { Loader2, Sparkles, AlertCircle, Search, X } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
 interface Post {
@@ -27,39 +30,117 @@ interface Post {
 }
 
 export default function FeedPage() {
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
   const [posts, setPosts] = useState<Post[]>([]);
   const [feedType, setFeedType] = useState<"all" | "following">("all");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Charger les publications selon l'onglet actif
-  const fetchPosts = async (type: "all" | "following") => {
+  // États pour la recherche de posts
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
+  // États pour le scroll infini (Cursor pagination)
+  const [nextCursor, setNextCursor] = useState<string | null>(null);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const sentinelRef = useRef<HTMLDivElement>(null);
+
+  // Gestion du Debounce sur la recherche (300ms)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  // Charger les publications de la première page
+  const fetchPosts = async (type: "all" | "following", search: string) => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`/api/posts?type=${type}`);
+      const queryParams = new URLSearchParams({
+        type,
+        limit: "8",
+      });
+      if (search.trim()) {
+        queryParams.append("search", search);
+      }
+
+      const res = await fetch(`/api/posts?${queryParams.toString()}`);
       if (res.ok) {
         const data = await res.json();
         setPosts(data.posts || []);
+        setNextCursor(data.nextCursor);
       } else {
         const data = await res.json();
-        setError(data.error || t("feed.error_fetch"));
+        setError(data.error || t("feed.error_fetch") || "Impossible de récupérer le flux.");
       }
     } catch (err) {
       console.error(err);
-      setError(t("feed.error_server"));
+      setError(t("feed.error_server") || "Erreur de connexion au serveur.");
     } finally {
       setLoading(false);
     }
   };
 
-  // Effectuer le chargement sur changement d'onglet
-  useEffect(() => {
-    fetchPosts(feedType);
-  }, [feedType]);
+  // Charger les publications suivantes (Infinite Scroll)
+  const fetchMorePosts = async () => {
+    if (!nextCursor || loadingMore) return;
+    setLoadingMore(true);
+    try {
+      const queryParams = new URLSearchParams({
+        type: feedType,
+        limit: "8",
+        cursor: nextCursor,
+      });
+      if (debouncedSearch.trim()) {
+        queryParams.append("search", debouncedSearch);
+      }
 
-  // Ajouter instantanément le post créé en haut du feed
+      const res = await fetch(`/api/posts?${queryParams.toString()}`);
+      if (res.ok) {
+        const data = await res.json();
+        setPosts((prev) => [...prev, ...(data.posts || [])]);
+        setNextCursor(data.nextCursor);
+      }
+    } catch (err) {
+      console.error("Erreur lors du scroll infini :", err);
+    } finally {
+      setLoadingMore(false);
+    }
+  };
+
+  // Déclencher le chargement initial lors de la bascule d'onglet ou de la saisie d'un filtre de recherche
+  useEffect(() => {
+    fetchPosts(feedType, debouncedSearch);
+  }, [feedType, debouncedSearch]);
+
+  // Observer l'élément sentinel en bas de page pour le scroll infini
+  useEffect(() => {
+    if (!nextCursor || loading) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // Déclencher le chargement dès que la sentinelle entre dans la marge de 250px
+        if (entries[0].isIntersecting && !loadingMore) {
+          fetchMorePosts();
+        }
+      },
+      { rootMargin: "250px" }
+    );
+
+    const currentSentinel = sentinelRef.current;
+    if (currentSentinel) {
+      observer.observe(currentSentinel);
+    }
+
+    return () => {
+      if (currentSentinel) {
+        observer.unobserve(currentSentinel);
+      }
+    };
+  }, [nextCursor, loadingMore, loading, feedType, debouncedSearch]);
+
   const handlePostCreated = (newPost: Post) => {
     setPosts((prev) => [newPost, ...prev]);
   };
@@ -76,6 +157,27 @@ export default function FeedPage() {
 
       {/* Zone de contenu défilante */}
       <div className="p-6 space-y-6 flex-1 max-w-2xl mx-auto w-full">
+        {/* Barre de Recherche de Posts */}
+        <div className="relative z-10 w-full mb-6">
+          <Search className="absolute left-3 top-3.5 w-4 h-4 text-gray-500" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder={language === "en" ? "Search posts..." : "Rechercher des publications..."}
+            className="w-full pl-9 pr-9 py-2.5 bg-white/5 border border-white/5 rounded-2xl text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary/30 transition-all"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-white cursor-pointer"
+              title="Effacer"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
+        </div>
+
         {/* Barre de Stories */}
         <StoriesBar />
 
@@ -132,10 +234,10 @@ export default function FeedPage() {
             <AlertCircle className="w-10 h-10 text-red-400" />
             <p className="text-gray-400 text-sm">{error}</p>
             <button
-              onClick={() => fetchPosts(feedType)}
+              onClick={() => fetchPosts(feedType, debouncedSearch)}
               className="px-4 py-2 bg-white/5 rounded-xl text-xs font-bold text-white hover:bg-white/10 cursor-pointer"
             >
-              {t("feed.retry") || "Retry"}
+              {t("feed.retry") || "Réessayer"}
             </button>
           </div>
         ) : posts.length === 0 ? (
@@ -152,6 +254,17 @@ export default function FeedPage() {
             {posts.map((post) => (
               <PostCard key={post.id} post={post} />
             ))}
+
+            {/* Sentinelle d'intersection de scroll infini */}
+            {nextCursor && (
+              <div ref={sentinelRef} className="py-6 flex justify-center">
+                {loadingMore ? (
+                  <Loader2 className="w-6 h-6 text-primary animate-spin" />
+                ) : (
+                  <div className="w-1.5 h-1.5 rounded-full bg-white/20" />
+                )}
+              </div>
+            )}
           </div>
         )}
       </div>
