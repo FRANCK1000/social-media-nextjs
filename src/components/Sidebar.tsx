@@ -10,7 +10,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
-import { Home, MessageSquare, User, LogOut, Sparkles, Palette, Globe } from "lucide-react";
+import { Home, MessageSquare, User, LogOut, Sparkles, Palette, Globe, Search } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 import { useToast } from "@/context/ToastContext";
 import { useLanguage } from "@/context/LanguageContext";
@@ -50,6 +50,7 @@ export default function Sidebar() {
 
   const navItems = [
     { name: t("sidebar.home"), href: "/", icon: Home },
+    { name: t("sidebar.search"), href: "/search", icon: Search },
     { name: t("sidebar.messages"), href: "/messages", icon: MessageSquare },
     { name: t("sidebar.profile"), href: user ? `/profile/${user.username}` : "#", icon: User },
   ];

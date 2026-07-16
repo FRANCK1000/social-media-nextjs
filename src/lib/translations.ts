@@ -7,6 +7,7 @@ export const translations = {
   fr: {
     sidebar: {
       home: "Accueil",
+      search: "Recherche",
       messages: "Messages",
       profile: "Profil",
       logout: "Se déconnecter",
@@ -102,6 +103,7 @@ export const translations = {
   en: {
     sidebar: {
       home: "Home",
+      search: "Search",
       messages: "Messages",
       profile: "Profile",
       logout: "Log out",
