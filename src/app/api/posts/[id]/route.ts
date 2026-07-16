@@ -98,13 +98,7 @@ export async function PUT(
 
     const { id } = await params;
     const { content, image } = await request.json();
-
-    if (!content.trim()) {
-      return NextResponse.json(
-        { error: "Le contenu ne peut pas être vide." },
-        { status: 400 }
-      );
-    }
+    const cleanContent = content ? content.trim() : "";
 
     // Récupérer le post d'origine
     const post = await db.post.findUnique({
@@ -146,11 +140,19 @@ export async function PUT(
       imageUrl = null; // Image retirée
     }
 
+    // Vérification finale : il doit rester soit du texte, soit une image !
+    if (!cleanContent && !imageUrl) {
+      return NextResponse.json(
+        { error: "La publication doit contenir du texte ou une image." },
+        { status: 400 }
+      );
+    }
+
     // Mettre à jour dans PostgreSQL
     const updatedPost = await db.post.update({
       where: { id },
       data: {
-        content,
+        content: cleanContent,
         image: imageUrl,
       },
       include: {

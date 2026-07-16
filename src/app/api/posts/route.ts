@@ -121,10 +121,11 @@ export async function POST(request: Request) {
 
     // 2. Récupérer les données
     const { content, image } = await request.json();
+    const cleanContent = content ? content.trim() : "";
 
-    if (!content) {
+    if (!cleanContent && !image) {
       return NextResponse.json(
-        { error: "Le contenu de la publication ne peut pas être vide." },
+        { error: "La publication doit contenir du texte ou une image." },
         { status: 400 }
       );
     }
@@ -144,7 +145,7 @@ export async function POST(request: Request) {
     // 4. Enregistrer la publication dans PostgreSQL
     const newPost = await db.post.create({
       data: {
-        content,
+        content: cleanContent,
         image: imageUrl,
         authorId: currentUser.id,
       },

@@ -92,8 +92,8 @@ export default function PostCard({ post }: PostCardProps) {
   // Éditer le texte de la publication
   const handleEditSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!editContent.trim()) {
-      toast.error("Le texte du post ne peut pas être vide.");
+    if (!editContent.trim() && !post.image) {
+      toast.error("La publication doit contenir du texte ou une image.");
       return;
     }
 
@@ -247,7 +247,6 @@ export default function PostCard({ post }: PostCardProps) {
             value={editContent}
             onChange={(e) => setEditContent(e.target.value)}
             className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-[15px] md:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary/30 transition-all resize-none h-24"
-            required
             autoFocus
           />
           <div className="flex items-center space-x-2 justify-end">
@@ -265,7 +264,7 @@ export default function PostCard({ post }: PostCardProps) {
             
             <button
               type="submit"
-              disabled={editLoading || !editContent.trim()}
+              disabled={editLoading || (!editContent.trim() && !post.image)}
               className="px-3 py-1.5 rounded-lg bg-gradient-accent text-xs font-bold text-white transition-all disabled:opacity-50 cursor-pointer flex items-center space-x-1"
             >
               {editLoading ? (
