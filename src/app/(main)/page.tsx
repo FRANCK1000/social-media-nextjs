@@ -12,6 +12,7 @@ import PostCard from "@/components/PostCard";
 import StoriesBar from "@/components/StoriesBar";
 import { Loader2, Sparkles, AlertCircle, Search, X } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { useAuth } from "@/context/AuthContext";
 
 interface Post {
   id: string;
@@ -31,6 +32,7 @@ interface Post {
 
 export default function FeedPage() {
   const { language, t } = useLanguage();
+  const { user, loading: authLoading } = useAuth();
   const [posts, setPosts] = useState<Post[]>([]);
   const [feedType, setFeedType] = useState<"all" | "following">("all");
   const [loading, setLoading] = useState(true);
@@ -112,8 +114,10 @@ export default function FeedPage() {
 
   // Déclencher le chargement initial lors de la bascule d'onglet ou de la saisie d'un filtre de recherche
   useEffect(() => {
+    if (authLoading) return;
+    if (!user) return; // La redirection client gérée par AuthContext prendra le relais
     fetchPosts(feedType, debouncedSearch);
-  }, [feedType, debouncedSearch]);
+  }, [feedType, debouncedSearch, user, authLoading]);
 
   // Observer l'élément sentinel en bas de page pour le scroll infini
   useEffect(() => {
@@ -210,7 +214,7 @@ export default function FeedPage() {
         </div>
 
         {/* Liste des publications */}
-        {loading ? (
+        {loading || authLoading ? (
           <div className="space-y-4">
             {/* Squelettes de chargement (Skeletons) */}
             {[1, 2, 3].map((n) => (
