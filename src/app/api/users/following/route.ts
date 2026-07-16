@@ -42,6 +42,7 @@ export async function GET() {
         username: u.username,
         avatar: u.avatar,
         isOnline: (now - new Date(u.lastActive).getTime()) < 15000,
+        lastActive: u.lastActive,
       };
     });
 

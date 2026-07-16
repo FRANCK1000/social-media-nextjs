@@ -54,6 +54,7 @@ export async function GET() {
             username: otherUser.username,
             avatar: otherUser.avatar,
             isOnline,
+            lastActive: otherUser.lastActive,
           },
           lastMessage: {
             content: msg.content,

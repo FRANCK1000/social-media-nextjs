@@ -9,7 +9,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { Search, Flame, Loader2, Check, X } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
+import { formatPresenceStatus } from "@/lib/presence";
 
 interface FollowedUser {
   id: string;
@@ -17,11 +19,14 @@ interface FollowedUser {
   username: string;
   avatar: string | null;
   isOnline: boolean;
+  lastActive?: string;
 }
 
 export default function RightSidebar() {
-  const { t } = useLanguage();
+  const router = useRouter();
+  const { language, t } = useLanguage();
   const [followingUsers, setFollowingUsers] = useState<FollowedUser[]>([]);
+  const [trends, setTrends] = useState<{ tag: string; posts: string }[]>([]);
   const [loading, setLoading] = useState(true);
   const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
 
@@ -49,12 +54,27 @@ export default function RightSidebar() {
     }
   };
 
+  // Charger les tendances dynamiquement
+  const fetchTrends = async () => {
+    try {
+      const res = await fetch("/api/posts/trends");
+      if (res.ok) {
+        const data = await res.json();
+        setTrends(data.trends || []);
+      }
+    } catch (error) {
+      console.error("Erreur lors de la récupération des tendances :", error);
+    }
+  };
+
   // Charger les abonnements au montage et rafraîchir toutes les 15s pour le statut en ligne
   useEffect(() => {
     fetchFollowingUsers();
+    fetchTrends();
 
     const interval = setInterval(() => {
       fetchFollowingUsers();
+      fetchTrends();
     }, 15000);
 
     return () => clearInterval(interval);
@@ -118,21 +138,10 @@ export default function RightSidebar() {
     }
   };
 
-  // Déclencher la recherche globale sur clic de tendance
+  // Déclencher la recherche de posts sur clic de tendance
   const handleTrendClick = (tag: string) => {
-    setSearchQuery(tag);
-    setShowDropdown(true);
-    if (searchInputRef.current) {
-      searchInputRef.current.focus();
-    }
+    router.push(`/?search=${encodeURIComponent(tag)}`);
   };
-
-  const trends = [
-    { tag: "#NextJS16", posts: "12.4K posts" },
-    { tag: "#React19", posts: "8.2K posts" },
-    { tag: "#TailwindV4", posts: "5.1K posts" },
-    { tag: "#Prisma7", posts: "3.9K posts" },
-  ];
 
   return (
     <aside className="w-80 hidden lg:flex flex-col h-screen sticky top-0 p-4 space-y-6 overflow-y-auto border-l border-white/5 bg-black/10 select-none">
@@ -236,7 +245,9 @@ export default function RightSidebar() {
                     </div>
                     <div className="overflow-hidden text-left">
                       <p className="text-xs font-bold text-white truncate">{item.name}</p>
-                      <p className="text-[10px] text-gray-500 truncate">@{item.username}</p>
+                      <p className="text-[10px] text-gray-500 truncate">
+                        {formatPresenceStatus(item.lastActive, item.isOnline, language)}
+                      </p>
                     </div>
                   </Link>
 

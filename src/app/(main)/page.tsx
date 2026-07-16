@@ -3,16 +3,18 @@
 // Intègre :
 // 1. Un moteur de recherche de publications en temps réel (avec Debounce 300ms)
 // 2. Un système de défilement infini (Infinite Scroll) basé sur l'Intersection Observer API et pagination par curseur
+// 3. Synchronisation avec les clics de tendances de la barre latérale
 
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, Suspense } from "react";
 import ComposePost from "@/components/ComposePost";
 import PostCard from "@/components/PostCard";
 import StoriesBar from "@/components/StoriesBar";
 import { Loader2, Sparkles, AlertCircle, Search, X } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { useAuth } from "@/context/AuthContext";
+import { useSearchParams } from "next/navigation";
 
 interface Post {
   id: string;
@@ -30,17 +32,19 @@ interface Post {
   isLiked: boolean;
 }
 
-export default function FeedPage() {
+function FeedContent() {
   const { language, t } = useLanguage();
   const { user, loading: authLoading } = useAuth();
+  const searchParams = useSearchParams();
+  const searchParamVal = searchParams.get("search");
   const [posts, setPosts] = useState<Post[]>([]);
   const [feedType, setFeedType] = useState<"all" | "following">("all");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // États pour la recherche de posts
-  const [searchQuery, setSearchQuery] = useState("");
-  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [searchQuery, setSearchQuery] = useState(searchParamVal || "");
+  const [debouncedSearch, setDebouncedSearch] = useState(searchParamVal || "");
 
   // États pour le scroll infini (Cursor pagination)
   const [nextCursor, setNextCursor] = useState<string | null>(null);
@@ -54,6 +58,14 @@ export default function FeedPage() {
     }, 300);
     return () => clearTimeout(timer);
   }, [searchQuery]);
+
+  // Synchroniser la recherche depuis l'URL (pour les clics sur les tendances de la sidebar)
+  useEffect(() => {
+    if (searchParamVal !== null) {
+      setSearchQuery(searchParamVal);
+      setDebouncedSearch(searchParamVal);
+    }
+  }, [searchParamVal]);
 
   // Charger les publications de la première page
   const fetchPosts = async (type: "all" | "following", search: string) => {
@@ -273,5 +285,18 @@ export default function FeedPage() {
         )}
       </div>
     </div>
+  );
+}
+
+// Wrapper avec Suspense pour éviter les erreurs de compilation statique Next.js (bails out of CSR)
+export default function FeedPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex justify-center items-center py-20 min-h-screen">
+        <Loader2 className="w-8 h-8 text-primary animate-spin" />
+      </div>
+    }>
+      <FeedContent />
+    </Suspense>
   );
 }
